@@ -19,5 +19,11 @@ fi
 echo "yt-dlp をアップデート中..."
 yt-dlp -U || true
 
+#権限
+chmod +x y.sh
+chmod +x s.sh
+chmod +x w.sh
+chmod +x j.sh
+
 # 対話シェルに入る
 exec bash
