@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-BASE_DIR="$(dirname "$0")"
+# init.sh の絶対パスの親ディレクトリを取得
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo "BASE_DIR = $BASE_DIR"
 
 # 初回セットアップかどうか
 if [ ! -f /root/.initialized ]; then
@@ -15,8 +18,8 @@ if [ ! -f /root/.initialized ]; then
   chmod +x /usr/local/bin/yt-dlp
 
   yt-dlp --version
-
   touch /root/.initialized
+
   echo "初回セットアップ完了"
 else
   echo "初回セットアップはスキップします"
@@ -28,19 +31,21 @@ yt-dlp -U || true
 ########################################
 # ytdlplocalsetting フォルダ処理を自動化
 ########################################
-if [ -d "$BASE_DIR/ytdlplocalsetting" ]; then
-  echo "ytdlplocalsetting のスクリプトを移動中..."
+SET_DIR="$BASE_DIR/ytdlplocalsetting"
 
-  # chmod +x を確実に実行
-  chmod +x "$BASE_DIR"/ytdlplocalsetting/*.sh || true
+if [ -d "$SET_DIR" ]; then
+  echo "ytdlplocalsetting のスクリプトを移動: $SET_DIR → /"
 
-  # ルート直下に移動（既存ファイルは上書き）
-  mv -f "$BASE_DIR"/ytdlplocalsetting/* / || true
+  # 権限付与
+  chmod +x "$SET_DIR"/*.sh || true
 
-  # 元フォルダ削除
-  rm -rf "$BASE_DIR/ytdlplocalsetting"
+  # root 直下に移動
+  mv -f "$SET_DIR"/* / || true
+
+  # フォルダ削除
+  rm -rf "$SET_DIR"
 else
-  echo "ytdlplocalsetting フォルダが見つかりませんでした"
+  echo "ytdlplocalsetting フォルダが見つかりませんでした: $SET_DIR"
 fi
 
 ########################################
@@ -48,11 +53,10 @@ fi
 ########################################
 INIT_PATH="$BASE_DIR/init.sh"
 if [ -f "$INIT_PATH" ]; then
-  echo "init.sh を削除します"
+  echo "init.sh を削除します: $INIT_PATH"
   rm -f "$INIT_PATH"
 fi
 
 echo "初期化処理がすべて完了しました。"
 
-# bash で対話シェルへ
 exec bash
