@@ -20,10 +20,10 @@ echo "yt-dlp をアップデート中..."
 yt-dlp -U || true
 
 #権限
-chmod +x y.sh
-chmod +x s.sh
-chmod +x w.sh
-chmod +x j.sh
+chmod +x ytdlplocalsetting/y.sh
+chmod +x ytdlplocalsetting/s.sh
+chmod +x ytdlplocalsetting/w.sh
+chmod +x ytdlplocalsetting/j.sh
 
 # 対話シェルに入る
 exec bash
